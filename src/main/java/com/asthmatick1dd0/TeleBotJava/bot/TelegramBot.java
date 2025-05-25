@@ -1,6 +1,8 @@
 package com.asthmatick1dd0.TeleBotJava.bot;
 
 import com.asthmatick1dd0.TeleBotJava.config.BotConfig;
+import com.asthmatick1dd0.TeleBotJava.service.FormService;
+import com.asthmatick1dd0.TeleBotJava.service.StateService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,9 +13,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class TelegramBot extends TelegramLongPollingBot  {
 
     final BotConfig cfg;
+    private final StateService stateService;
+    private final FormService formService;
 
-    public TelegramBot(BotConfig cfg) {
+    public TelegramBot(BotConfig cfg, StateService stateService, FormService formService) {
         this.cfg = cfg;
+        this.stateService = stateService;
+        this.formService = formService;
     }
 
     @Override
@@ -32,11 +38,16 @@ public class TelegramBot extends TelegramLongPollingBot  {
         if(update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
+            long userId = update.getMessage().getFrom().getId();
 
             switch (messageText) {
                 case "/start":
-                        startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
-                        break;
+                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    break;
+                case "/form":
+                    stateService.clearState(userId);
+                    sendMessage(chatId, formService.startForm(userId));
+                    break;
                 default: sendMessage(chatId, "Извините, я не знаю такой команды");
             }
         }

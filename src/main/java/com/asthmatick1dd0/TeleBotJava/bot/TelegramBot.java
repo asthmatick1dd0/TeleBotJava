@@ -48,14 +48,20 @@ public class TelegramBot extends TelegramLongPollingBot  {
                     stateService.clearState(userId);
                     sendMessage(chatId, formService.startForm(userId));
                     break;
-                default: sendMessage(chatId, "Извините, я не знаю такой команды");
+                default:
+                    if (stateService.getState(userId) != StateService.State.NONE) {
+                        String reply = formService.handleSteps(userId, messageText);
+                        sendMessage(chatId, reply);
+                    } else {
+                        sendMessage(chatId, "Я не знаю такой команды. Напишите /help.");
+                    }
             }
         }
     }
 
     private void startCommandReceived(long chatId, String name) {
 
-        String answer = "Привет, " + name;
+        String answer = "Привет, " + name + ". Для того, чтобы начать отправку формы, напиши /form";
 
         sendMessage(chatId, answer);
     }

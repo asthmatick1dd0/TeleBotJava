@@ -1,4 +1,4 @@
-package com.asthmatick1dd0.TeleBotJava.service;
+package com.asthmatick1dd0.TeleBotJava.bot;
 
 import com.asthmatick1dd0.TeleBotJava.config.BotConfig;
 import org.springframework.stereotype.Component;
@@ -17,6 +17,17 @@ public class TelegramBot extends TelegramLongPollingBot  {
     }
 
     @Override
+    public String getBotUsername() {
+        return cfg.getBotName();
+    }
+
+
+    @Override
+    public String getBotToken() {
+        return cfg.getToken();
+    }
+
+    @Override
     public void onUpdateReceived(Update update) {
         if(update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
@@ -29,17 +40,6 @@ public class TelegramBot extends TelegramLongPollingBot  {
                 default: sendMessage(chatId, "Извините, я не знаю такой команды");
             }
         }
-    }
-
-    @Override
-    public String getBotUsername() {
-        return cfg.getBotName();
-    }
-
-
-    @Override
-    public String getBotToken() {
-        return cfg.getToken();
     }
 
     private void startCommandReceived(long chatId, String name) {

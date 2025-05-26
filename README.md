@@ -18,6 +18,7 @@
 ## Требования
 
 - [Docker](https://www.docker.com/get-started) и [Docker Compose](https://docs.docker.com/compose/) (находятся в TeleBotJava/scr/)
+- **PostgreSQL 17** (если запускать базу не в Docker)
 - Java 21 (если запускать без Docker)
 - Maven 3.9+ (если запускать без Docker)
 - Токен Telegram-бота ([создать в @BotFather](https://t.me/botfather))

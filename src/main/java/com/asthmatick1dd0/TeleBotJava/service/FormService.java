@@ -56,7 +56,7 @@ public class FormService {
                     userResponseRepository.save(response);
                     stateService.clearState(userId);
                     log.info("Form filling completed by user " + response.getName());
-                    return "Спасибо! Ваша форма отправлена.";
+                    return "Спасибо! Ваша форма отправлена. Если хотите увидеть отчёт по пройденным опросам, то напишите /rreport";
                 } catch (NumberFormatException e) {
                     return "Введите число от 1 до 10:";
                 }

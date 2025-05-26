@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:17
+    container_name: telebot-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: yourdb # Замените на название базы данных
+      POSTGRES_USER: postgres # Замените на пользователя базы данных
+      POSTGRES_PASSWORD: yourpassword # Замените на пароль от вашей базы данных
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - telebot-network
+    ports:
+      - "5432:5432"
+
+  bot:
+    build: .
+    container_name: telebot-java
+    depends_on:
+      - db
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/yourdb # Замените на адресс базы данных
+      DB_USER: postgres # Замените на пользователя базы данных
+      DB_PASSWORD: yourpassword # Замените на пароль от вашей базы данных
+      BOT_TOKEN: changeme # Замените на токен вашего бота
+    networks:
+      - telebot-network
+    restart: unless-stopped
+
+volumes:
+  db_data:
+
+networks:
+  telebot-network:
+    driver: bridge
